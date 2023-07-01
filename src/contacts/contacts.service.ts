@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -36,25 +36,34 @@ export class ContactsService {
   }
 
   async findOne(id: string) {
-    try{
-       await this.contactModel.findById(id)
-    }
-    catch(error){
-      throw new NotFoundException
-    }
+  
+      console.log("ontact", id)
+      const contact =  await this.contactModel.findById(id).populate('user1').populate('user2')
+
+      if(!contact)
+        throw new NotFoundException
+      return contact
+    
     
   }
 
-  update(id: number, updateContactDto: UpdateContactDto) {
-    return `This action updates a #${id} contact`;
+  async update(id: string, updateContactDto: UpdateContactDto,userId:string) {
+    const contact = await this.contactModel.findById(id) as any
+    if(contact.user1 != userId && contact.user2 != userId)
+        throw new UnauthorizedException()
+    return this.contactModel.findOneAndUpdate({_id:id},updateContactDto,{new:true, lean:true})
   }
 
   async remove(id: string,userId:string) {
-    const contact = await this.contactModel.findById(id)
-    console.log("ee", contact);
+    const contact = await this.contactModel.findById(id) as any
+    if(!contact)
+      throw new NotFoundException
+    else{
+      if(contact.user1 != userId && contact.user2 != userId)
+        throw new UnauthorizedException()
+      return this.contactModel.deleteOne({_id:id})
+    }
+   
     
-    // if(contact.user1 != contact.user2 )
-
-    // return this.contactModel.deleteOne({_id:id})
   }
 }

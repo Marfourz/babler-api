@@ -1,15 +1,18 @@
-import { Prop, Schema, raw } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory, raw } from "@nestjs/mongoose";
 import { User } from "../users/users.schema";
-import mongoose from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 import { DiscussionType } from "./discussions.types";
 
-@Schema()
+export type DiscussionDocument = HydratedDocument<Discussion>;
+@Schema({
+    timestamps: true
+})
 export class Discussion{
-    @Prop({type : mongoose.Schema.Types.ObjectId, ref: User})
-    sender : User
+    @Prop({type: mongoose.Schema.Types.ObjectId,ref: 'User'})
+    sender: User
 
-    @Prop()
-    tag: DiscussionType
+    @Prop({enum : DiscussionType})
+    tag: string
 
     @Prop()
     name: string
@@ -17,7 +20,7 @@ export class Discussion{
     @Prop()
     description: string
 
-    @Prop(raw(
+    @Prop(raw([
         {    
             user : Array<{
                 type : mongoose.Schema.Types.ObjectId,
@@ -28,23 +31,28 @@ export class Discussion{
             isArchivedChat : Boolean,
             addedAt: Date
         }
+    ]
+       
     ))
     participants : Record<string, any>
 
-    @Prop(raw({
-        sender: {
-            type : mongoose.Schema.Types.ObjectId,
-            ref: User
-        },
-        receiverDiscussion: {
-            type : mongoose.Schema.Types.ObjectId,
-            ref: User
-        },
-        text: String,
-        file: String
-    }))
-    lastMessage : Record<string, any>
+    // @Prop(raw({
+    //     sender: {
+    //         type : mongoose.Schema.Types.ObjectId,
+    //         ref: User
+    //     },
+    //     receiverDiscussion: {
+    //         type : mongoose.Schema.Types.ObjectId,
+    //         ref: User
+    //     },
+    //     text: String,
+    //     file: String
+    // }))
+    // lastMessage : Record<string, any>
 
 
 
 }
+
+
+export const DiscussionSchema = SchemaFactory.createForClass(Discussion)

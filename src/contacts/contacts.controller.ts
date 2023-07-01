@@ -27,18 +27,16 @@ export class ContactsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    try{
       return this.contactsService.findOne(id);
-    }
-    catch(error){
-      throw NotFoundException
-    }
+   
     
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto) {
-    return this.contactsService.update(+id, updateContactDto);
+  @UseGuards(AuthGuard)
+  
+  update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto,@Req() req) {
+    return this.contactsService.update(id, updateContactDto,req.user.id);
   }
 
   @Delete(':id')

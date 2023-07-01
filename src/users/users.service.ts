@@ -48,6 +48,14 @@ export class UsersService {
     const limit = searchData.limit ?? 10
     const skip = searchData.skip ?? 0
     
+    const total = await this.userModel.find({
+      $or: [
+          {username : {$regex : ".*" + searchData.search + ".*"}},
+          {firstname : {$regex : ".*" + searchData.search + ".*"},},
+          { lastname :{$regex : ".*" + searchData.search + ".*"}}
+      ]
+    }).count()
+    
     const users = await this.userModel.find({
       $or: [
           {username : {$regex : ".*" + searchData.search + ".*"}},
@@ -55,7 +63,12 @@ export class UsersService {
           { lastname :{$regex : ".*" + searchData.search + ".*"}}
       ]
     }).skip(skip).limit(limit)
-    return users
+    return {
+      data: users,
+      total: total,
+      limit:limit,
+      skip: skip
+    }
   }
 
   findOne(id: string) {
@@ -65,7 +78,7 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto) {
     try{
       const user = await this.userModel.findById(id)
-      return this.userModel.updateOne({_id:id}, updateUserDto)
+      return this.userModel.findByIdAndUpdate(id, updateUserDto,{new:true,lean:true})
     }catch(error){
       throw  new HttpException("User not found", HttpStatus.NOT_FOUND)
     }

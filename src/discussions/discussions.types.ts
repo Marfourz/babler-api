@@ -1,6 +1,6 @@
 
 
 export enum DiscussionType {
-    PRIVATE = "private",
-    PUBLIC = "public"
+    PRIVATE = "PRIVATE",
+    GROUP = "GROUP"
 }

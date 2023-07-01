@@ -93,7 +93,7 @@ export class RequestsService {
         })
       }
 
-      return this.requestModel.updateOne({_id:id},updateRequestDto)
+      return this.requestModel.findOneAndUpdate({_id:id},updateRequestDto,{lean:true,new:true})
 
     }
     catch(error){
