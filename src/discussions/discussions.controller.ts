@@ -5,6 +5,7 @@ import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('discussions')
+@UseGuards(AuthGuard)
 export class DiscussionsController {
   constructor(private readonly discussionsService: DiscussionsService) {}
 
@@ -21,12 +22,13 @@ export class DiscussionsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.discussionsService.findOne(+id);
+    return this.discussionsService.findOne(id);
   }
 
+  
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiscussionDto: UpdateDiscussionDto) {
-    return this.discussionsService.update(+id, updateDiscussionDto);
+  update(@Param('id') id: string, @Body() updateDiscussionDto: UpdateDiscussionDto, @Req() req) {
+    return this.discussionsService.update(id, updateDiscussionDto, req.user.id);
   }
 
   @Delete(':id')

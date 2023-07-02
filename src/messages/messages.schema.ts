@@ -15,6 +15,9 @@ export class Message{
     @Prop({type: mongoose.Schema.Types.ObjectId,ref: 'Discussion'})
     receiveDiscussion: Discussion
 
+    @Prop({type: mongoose.Schema.Types.ObjectId,ref: 'Message'})
+    responseToMsg: Message
+
     @Prop()
     text: string
 
@@ -30,6 +33,9 @@ export class Message{
        
     ))
     reactions: Array<any>
+
+    @Prop()
+    file: string
 }
 
 

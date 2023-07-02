@@ -22,13 +22,13 @@ export class Discussion{
 
     @Prop(raw([
         {    
-            user : Array<{
+            user : {
                 type : mongoose.Schema.Types.ObjectId,
                 ref: User
-            }> ,
-            isAdmin : Boolean,
-            hasNewNotif : Boolean,
-            isArchivedChat : Boolean,
+            } ,
+            isAdmin : {type: Boolean, default: false},
+            hasNewNotif : {type: Boolean, default: false},
+            isArchivedChat : {type: Boolean, default: false},
             addedAt: Date
         }
     ]

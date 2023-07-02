@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 @Module({
   imports:[MongooseModule.forFeature([{ name: Discussion.name, schema: DiscussionSchema }]), UsersModule],
   controllers: [DiscussionsController],
-  providers: [DiscussionsService]
+  providers: [DiscussionsService],
+  exports:[DiscussionsService]
 })
 export class DiscussionsModule {}
