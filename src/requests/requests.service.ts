@@ -8,6 +8,7 @@ import { User, UserDocument } from '../users/users.schema';
 import { UsersService } from '../users/users.service';
 import { FindRequestDto } from './dto/find-request.dto';
 import { Contact, ContactDocument } from '../contacts/contacts.schema';
+import { Request } from './requests.schema';
 
 @Injectable()
 export class RequestsService {
