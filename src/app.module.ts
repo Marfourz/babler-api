@@ -13,7 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/blabber-db'),UsersModule, ContactsModule, MessagesModule, RequestsModule, DiscussionsModule, ParticipantsModule, AuthModule,
+  imports: [MongooseModule.forRoot(process.env.DATABASE_URL || 'mongodb://localhost/blabber-db'),UsersModule, ContactsModule, MessagesModule, RequestsModule, DiscussionsModule, ParticipantsModule, AuthModule,
   ConfigModule.forRoot(),
   JwtModule.register({
     global: true,
