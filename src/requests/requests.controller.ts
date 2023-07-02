@@ -29,7 +29,7 @@ export class RequestsController {
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateRequestDto: UpdateRequestDto, @Req() req) {
+  async update(@Param('id') id: string, @Body() updateRequestDto: UpdateRequestDto, @Req() req : any) {
     return this.requestsService.update(id, updateRequestDto,req.user.id);
   }
 

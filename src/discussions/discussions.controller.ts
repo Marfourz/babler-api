@@ -11,7 +11,7 @@ export class DiscussionsController {
 
   @Post()
   @UseGuards(AuthGuard)
-  create(@Body() createDiscussionDto: CreateDiscussionDto, @Req() req) {
+  create(@Body() createDiscussionDto: CreateDiscussionDto, @Req() req : any) {
     return this.discussionsService.create(createDiscussionDto, req.user.id);
   }
 
@@ -27,7 +27,7 @@ export class DiscussionsController {
 
   
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiscussionDto: UpdateDiscussionDto, @Req() req) {
+  update(@Param('id') id: string, @Body() updateDiscussionDto: UpdateDiscussionDto,@Req() req : any) {
     return this.discussionsService.update(id, updateDiscussionDto, req.user.id);
   }
 

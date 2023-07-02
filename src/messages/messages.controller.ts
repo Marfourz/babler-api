@@ -11,7 +11,7 @@ export class MessagesController {
 
   
   @Post()
-  create(@Body() createMessageDto: CreateMessageDto,@Req() req) {
+  create(@Body() createMessageDto: CreateMessageDto,@Req() req : any) {
     return this.messagesService.create(createMessageDto,req.user.id);
   }
 

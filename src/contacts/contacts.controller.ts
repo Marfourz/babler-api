@@ -21,7 +21,7 @@ export class ContactsController {
 
   @Get()
   @UseGuards(AuthGuard)
-  findByUser(@Req() req){
+  findByUser(@Req() req : any){
     return this.contactsService.findByUser(req.user.id);
   }
 
@@ -35,13 +35,13 @@ export class ContactsController {
   @Patch(':id')
   @UseGuards(AuthGuard)
   
-  update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto,@Req() req) {
+  update(@Param('id') id: string, @Body() updateContactDto: UpdateContactDto,@Req() req : any) {
     return this.contactsService.update(id, updateContactDto,req.user.id);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  remove(@Param('id') id: string,@Req() req) {
+  remove(@Param('id') id: string,@Req() req : any ) {
     return this.contactsService.remove(id, req.user.id);
   }
 }

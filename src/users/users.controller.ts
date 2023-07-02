@@ -21,7 +21,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Get('myInfos')
-  myInfos(@Req() req){
+  myInfos(@Req() req : any){
       return this.usersService.findOne(req.user.id)
   }
 
