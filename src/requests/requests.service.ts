@@ -36,6 +36,8 @@ export class RequestsService {
       }
       ]
     })
+
+    console.log("request", request, sender)
   
     if(request){
       if(request.sender == sender.id)
@@ -59,7 +61,7 @@ export class RequestsService {
     if(filters.senderId)
       requestParams["sender"] = filters.senderId
     try{
-      return await this.requestModel.find(requestParams)
+      return await this.requestModel.find(requestParams).populate('sender')
     }
     catch(error){
       throw new BadRequestException("Invalid params")
@@ -77,6 +79,7 @@ export class RequestsService {
       
       const request = await this.requestModel.findById(id)
 
+      console.log(request, userId,"zzzz")
       
       if(request.sender != userId && request.receiver != userId)
         throw new UnauthorizedException("Impossible to make this action")

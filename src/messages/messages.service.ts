@@ -47,7 +47,7 @@ export class MessagesService {
   findAll(disccussionId: string) {
     return this.messageModel.find({
       receiveDiscussion : disccussionId
-    })
+    }).populate('sender').populate('')
   }
 
   async saveFileInMessage(fileUrl : string, messageId){
