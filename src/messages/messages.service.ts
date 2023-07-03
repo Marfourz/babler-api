@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -37,15 +37,28 @@ export class MessagesService {
     }
       
     return this.messageModel.create({
-        discussion : createMessageDto.discussionId,
+      receiveDiscussion : createMessageDto.discussionId,
         sender: userId,
         text: createMessageDto.text,
         responseToMsg : createMessageDto.responseToMessageId
     }) 
   }
 
-  findAll() {
-    return `This action returns all messages`;
+  findAll(disccussionId: string) {
+    return this.messageModel.find({
+      receiveDiscussion : disccussionId
+    })
+  }
+
+  async saveFileInMessage(fileUrl : string, messageId){
+    const message = await this.messageModel.findById(messageId)
+
+    if(!messageId)
+      throw new NotFoundException
+    
+    message.file = fileUrl
+
+    return message.save()
   }
 
   findOne(id: number) {

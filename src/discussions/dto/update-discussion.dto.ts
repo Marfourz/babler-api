@@ -5,7 +5,7 @@ import { DiscussionAction } from '../discussions.types';
 
 export class UpdateDiscussionDto extends PartialType(CreateDiscussionDto) {
     @IsNotEmpty()
-    @IsEnum(["UNARCHIVED","ARCHIVED","DEFINE_ADMINS_GROUP","ADD_USERS_GROUP"])
+    @IsEnum(["UNARCHIVED","ARCHIVED","DEFINE_ADMINS_GROUP","ADD_USERS_GROUP","LEAVE_GROUP"])
     action: DiscussionAction
 
     isArchived: boolean

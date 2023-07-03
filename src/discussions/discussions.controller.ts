@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, NotFoundException, Query } from '@nestjs/common';
 import { DiscussionsService } from './discussions.service';
 import { CreateDiscussionDto } from './dto/create-discussion.dto';
 import { UpdateDiscussionDto } from './dto/update-discussion.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { FindDiscussionDto } from './dto/find-discussion.dto';
 
 @Controller('discussions')
 @UseGuards(AuthGuard)
@@ -12,17 +13,24 @@ export class DiscussionsController {
   @Post()
   @UseGuards(AuthGuard)
   create(@Body() createDiscussionDto: CreateDiscussionDto, @Req() req : any) {
+    
     return this.discussionsService.create(createDiscussionDto, req.user.id);
+    
   }
 
   @Get()
-  findAll() {
-    return this.discussionsService.findAll();
+  @UseGuards(AuthGuard)
+  findAll(@Query() params : FindDiscussionDto, @Req() req) {
+    
+    return this.discussionsService.findAll(params, req.user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.discussionsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const discussion = await this.discussionsService.findOne(id);
+    if(!discussion)
+      throw new NotFoundException
+    return discussion
   }
 
   
@@ -32,7 +40,8 @@ export class DiscussionsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.discussionsService.remove(+id);
+  @UseGuards(AuthGuard)
+  remove(@Param('id') id: string, @Req() req) {
+    return this.discussionsService.remove(id,req.user.id);
   }
 }

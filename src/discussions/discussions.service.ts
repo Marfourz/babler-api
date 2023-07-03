@@ -11,6 +11,7 @@ import { Discussion, DiscussionDocument } from './discussions.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UsersService } from '../users/users.service';
+import { FindDiscussionDto } from './dto/find-discussion.dto';
 
 @Injectable()
 export class DiscussionsService {
@@ -102,8 +103,14 @@ export class DiscussionsService {
     }
   }
 
-  findAll() {
-    return `This action returns all discussions`;
+  findAll(params : FindDiscussionDto, userId : string) {
+
+    const filters = {}
+
+    if(params.tag)
+      filters['tag'] = params.tag
+
+    return this.discussionModel.find({...filters, 'participants.user': userId})
   }
 
   findOne(id: string) {
@@ -160,12 +167,31 @@ export class DiscussionsService {
       
     }
 
+    else if(updateDiscussionDto.action == DiscussionAction.LEAVE_GROUP){
+      const participantIndex = disccussion.participants.findIndex((value)=>value.user == userId)
+     
+      if(participantIndex == -1)
+        throw new BadRequestException('You not in this discussion')
+      
+      disccussion.participants = disccussion.participants.filter((value)=>{
+        return value.user != userId
+      })
+    
+      return disccussion.save()
+    }
+
     else
       return await this.discussionModel.findByIdAndUpdate({_id:id}, updateDiscussionDto,{new: true})
     
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} discussion`;
+  async remove(id: string, userId : string) {
+      const discussion = await this.discussionModel.findById(id)
+      if(!discussion)
+        throw new NotFoundException('Discussion not found')
+      const user  = discussion.participants.find((value)=>value.user == userId)
+      if(!user)
+        throw new BadRequestException('You can not delete this discussion')
+      return this.discussionModel.deleteOne({_id: id})
   }
 }

@@ -36,19 +36,19 @@ export class Discussion{
     ))
     participants : Record<string, any>
 
-    // @Prop(raw({
-    //     sender: {
-    //         type : mongoose.Schema.Types.ObjectId,
-    //         ref: User
-    //     },
-    //     receiverDiscussion: {
-    //         type : mongoose.Schema.Types.ObjectId,
-    //         ref: User
-    //     },
-    //     text: String,
-    //     file: String
-    // }))
-    // lastMessage : Record<string, any>
+    @Prop(raw({
+        sender: {
+            type : mongoose.Schema.Types.ObjectId,
+            ref: User
+        },
+        receiverDiscussion: {
+            type : mongoose.Schema.Types.ObjectId,
+            ref: User
+        },
+        text: String,
+        file: String
+    }))
+    lastMessage : Record<string, any>
 
 
 
