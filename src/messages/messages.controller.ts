@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(AuthGuard)
 @Controller('messages')
@@ -11,8 +12,11 @@ export class MessagesController {
 
   
   @Post()
-  create(@Body() createMessageDto: CreateMessageDto,@Req() req : any) {
-    return this.messagesService.create(createMessageDto,req.user.id);
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createMessageDto: CreateMessageDto,@Req() req : any) {
+    return this.messagesService.create(createMessageDto,req.user.id,file);
   }
 
   @Get()

@@ -1,0 +1,1243 @@
+version: https://ussd.bomboo.io/v1/spec-schema.json
+name: "Agriwallet"
+flows:
+  - path: /
+    title: "$store.fisrtScreen.data"
+    actions:
+      - type: store
+        command: write
+        key: defaultPhone
+        value: $store.defaults.msisdn
+      - type: store
+        command: write
+        key: baseUrl
+        value: https://agriwallet-dev.opensi.co/api
+    
+      - type: script
+        file: verifyUserIdentity.js
+        lang: js
+    end: $store.fisrtScreen.end
+
+
+
+
+
+  - path: /4
+    title: $store.choiceScreen1.data
+    actions:
+      - type: script
+        file: choiceScreen1.js
+        lang: js
+    end: $store.choiceScreen1.end
+
+  - path: /4/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  
+
+  - path: /4/1
+    title: $store.typesIntrantsScreen.data
+    actions:
+      - type: script
+        file: getTypeIntrantsScreen.js
+        lang: js
+    end: $store.typesIntrantsScreen.end
+
+
+  - path: /4/1/:typeIntrantIndex
+    title: $store.intrantsScreen.data
+    actions:
+      - type: store
+        command: write
+        key: typeIntrantIndex
+        value: $typeIntrantIndex
+      - type: script
+        file: getIntrantsScreen.js
+        lang: js
+    end: $store.intrantsScreen.end
+
+
+  - path: /4/1/:typeIntrantIndex/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+   
+
+  - path: /4/1/:typeIntrantIndex/:intrantIndex
+    title: $store.checkMaxQuantityScreen.data
+    actions:
+      - type: store
+        command: write
+        key: intrantIndex
+        value: $intrantIndex
+      - type: script
+        file: checkMaxQuantity.js
+        lang: js
+    end: $store.typesIntrantsScreen.end
+  
+  
+  
+  - path: /4/1/:typeIntrantIndex/:intrantIndex/:quantity
+    title: $store.confirmQuantityScreen.data
+   
+    actions:
+      - type: store
+        command: write
+        key: quantity
+        value: $quantity
+      - type: script
+        file: confirmQuantity.js
+        lang: js
+    end: $store.confirmQuantityScreen.end
+     
+
+  - path: /4/1/:typeIntrantIndex/:intrantIndex/:quantity/1
+    title: $store.industrialListScreen.data
+    actions:
+      - type: script
+        file: industrialListScreen.js
+        lang: js
+    end: $store.industrialListScreen.end
+
+  - path: /4/1/:typeIntrantIndex/:intrantIndex/:quantity/1/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  - path: /4/1/:typeIntrantIndex/:intrantIndex/:quantity/1/:industrialIndex
+    title:  $store.sendIntrantRequestScreen.data
+    actions:
+      - type: store
+        command: write
+        key: industrialIndex
+        value: $industrialIndex
+      - type: script
+        file: sendIntrantRequest.js
+        lang: js
+    end: true
+    
+
+
+  - path: /4/1/:typeIntrantIndex/:intrantIndex/:quantity/2
+    title: Entrez la quantité d'intrant que vous voulez
+    actions:
+      - type: script
+        file: rollbackQuantityChoice.js
+        lang: js
+
+  - path: /4/1/:typeIntrantIndex/:intrantIndex/:quantity/3
+    title: Demande annulée avec succès
+    end: true
+
+  - path: /4/2
+    title: Vos demandes
+    screen:
+      choices:
+        - Demandes en cours
+        - Demandes acceptées
+        - Demandes rejetéees
+
+
+       
+  
+  - path: /4/2/1
+    title: $store.demandesIntrantsScreen.data
+    actions:
+       - type: store
+         command: write
+         key: typeDemande
+         value: pending
+       - type: script
+         file: demandesIntrantsScreen.js
+         lang: js
+
+  - path: /4/2/1/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+  
+  - path: /4/2/1/:demandeIndex
+    title: $store.demandeIntrantDetailScreen.data
+    actions:
+      - type: store
+        command: write
+        key: demandeIndex
+        value: $demandeIndex
+      - type: script
+        file: demandeIntrantDetailScreen.js
+        lang: js
+    end: demandeIntrantDetailScreen.end
+
+
+
+
+
+  
+
+  
+  
+
+
+  - path: /4/2/2
+    title: $store.demandesIntrantsScreen.data
+    actions:
+       - type: store
+         command: write
+         key: typeDemande
+         value: accepted
+       - type: script
+         file: demandesIntrantsScreen.js
+         lang: js
+
+  - path: /4/2/2/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  - path: /4/2/2/:demandeIndex
+    title: $store.demandeIntrantDetailScreen.data
+    actions:
+      - type: store
+        command: write
+        key: demandeIndex
+        value: $demandeIndex
+      - type: script
+        file: demandeIntrantDetailScreen.js
+        lang: js
+    end: demandeIntrantDetailScreen.end
+
+  
+
+
+  - path: /4/2/3
+    title: $store.demandesIntrantsScreen.data
+    actions:
+       - type: store
+         command: write
+         key: typeDemande
+         value: rejected
+       - type: script
+         file: demandesIntrantsScreen.js
+         lang: js
+
+  - path: /4/2/3/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  - path: /4/2/3/:demandeIndex
+    title: $store.demandeIntrantDetailScreen.data
+    actions:
+      - type: store
+        command: write
+        key: demandeIndex
+        value: $demandeIndex
+      - type: script
+        file: demandeIntrantDetailScreen.js
+        lang: js
+    end: demandeIntrantDetailScreen.end
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+  - path: /1
+    title: "Montant à retirer"
+  
+  - path: /1/:amount
+    title: "Retirer par"
+    screen:
+      choices:
+        - Mobile money
+        - Ecobank
+    actions:
+      - type: store
+        command: write
+        key: amount
+        value: $amount
+
+  - path: /1/:amount/:modeRetrait
+    title: "Entrez votre code pour confirmer le retrait de $store.amount F"
+    actions:
+      - type: store
+        command: write
+        key: modeRetrait
+        value: $modeRetrait
+      - type: script
+        file: modeRetrait.js
+        lang: js
+      - type: script
+        file: calculateFees.js
+        lang: js
+  
+  - path: /1/:amount/:modeRetrait/:code
+    title: $store.withdrawScreen.data
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: withdraw.js
+        lang: js
+    end: $store.withdrawScreen.end
+  
+  - path: /1/:amount/:modeRetrait/:code/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  - path: /2
+    title: $store.choiceScreen3.data
+    actions:
+      - type: script
+        file: choiceScreen3.js
+        lang: js
+
+  - path: /2/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+  
+  - path: /2/1
+    title: "Code PIN agriwallet"
+
+  - path: /2/1/:code
+    title: $store.choiceScreen31code.data
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: choiceScreen31code.js
+        lang: js
+    end : $store.choiceScreen31code.end
+      
+
+  - path: /2/1/:code/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+  
+  - path: /2/2
+    title: "Code PIN agriwallet"
+
+
+  - path: /2/2/:code
+    title: $store.choiceScreen32.data
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: choiceScreen32.js
+        lang: js
+    end: $store.choiceScreen32.end
+
+
+
+  - path: /2/2/:code/0
+    title: $store.choiceScreen3.data
+    actions:
+      - type: script
+        file: choiceScreen32Rollback.js
+        lang: js
+      - type: script
+        file: choiceScreen3.js
+        lang: js
+
+  - path: /2/3
+    title: "Code actuel"
+  
+  - path: /2/3/:oldCode
+    title: $store.verifyOldCodeScreen.data
+    actions:
+      - type: store
+        command: write
+        key: oldCode
+        value: $oldCode
+      - type: script
+        file: verifyOldCode.js
+        lang: js
+    end: $store.verifyOldCodeScreen.end
+     
+
+  - path: /2/3/:oldCode/:code
+    title: "Confirmez le nouveau code PIN."
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      
+  
+  - path: /2/3/:oldCode/:code/:confirmCode
+    title: $store.defineCodeScreen.data
+    actions:
+      - type: store
+        command: write
+        key: confirmCode
+        value: $confirmCode
+      - type: script
+        file: defineCode.js
+        lang: js
+    end: $store.defineCodeScreen.end
+
+  - path: /2/3/:oldCode/:code/:confirmCode/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+
+  - path: /2/4
+    title: "Entrer le montant à approvisionné"
+
+  - path: /2/4/:amount
+    title: Par quel numéro souhaitez-vous payer ?
+    actions:
+      - type: store
+        command: write
+        key: amount
+        value: $amount
+    screen:
+      choices:
+        - Mon numéro
+        - Autre numéro
+
+
+
+
+  - path: /2/4/:amount/1
+    title: $store.suppliedWalletScreen.data
+    actions:
+      - type: script
+        file: suppliedWalletScreen.js
+        lang: js
+    end: $store.suppliedWalletScreen.end
+
+
+
+
+
+
+  - path: /2/4/:amount/2
+    title: "Entrer le numéro de l'abonné:"
+
+  - path: /2/4/:amount/2/:anotherSubscriberNumber
+    title: $store.suppliedWalletScreen.data
+    middlewares:
+      - type: regex
+        expr: '(^\d{8}$)|(^229\d{8}$)'
+    inCaseOfFail:
+      policiy: retry
+      customMsg: "Numéro invalide, veuillez réessayer:"
+      maxTrial: 2
+
+    actions:
+      - type: script
+        file: normalizePhoneNumber
+        lang: js
+      - type: script
+        file: suppliedWalletScreen.js
+        lang: js
+    end: true
+
+
+
+  - path: /3
+    title: Numéro de téléphone du bénéficiaire
+ 
+
+  - path: /3/:phoneNumber
+    title: Confirmez le numéro de téléphone du bénéficiaire
+    actions:
+      - type: store
+        command: write
+        key: phoneNumber
+        value: $phoneNumber
+     
+  
+  - path: /3/:phoneNumber/:confirmPhoneNumber
+    title: $store.getUsernameScreen.data
+    actions:
+      - type: store
+        command: write
+        key: confirmPhoneNumber
+        value: $confirmPhoneNumber
+      - type: script
+        file: getUsername.js
+        lang: js
+    end: $store.getUsernameScreen.end
+     
+  
+  - path: /3/:phoneNumber/:confirmPhoneNumber/:amount
+    title: Motif
+    screen:
+      choices:
+        - Rejets
+        - Equipements
+        - Engrais
+        - Main d'oeuvre
+        - Produit phytosanitaire
+        - Location parcelle
+        - Paiement de service
+        - Autre
+        - Retour
+    actions:
+      - type: store
+        command: write
+        key: amount
+        value: $amount
+  
+ 
+  
+  - path: /3/:phoneNumber/:confirmPhoneNumber/:amount/:motif
+    title: $store.confirmSendMoney
+    actions:
+      - type: store
+        command: write
+        key: motif
+        value: $motif
+      - type: script
+        file: getReason.js
+        lang: js
+
+
+  - path: /3/:phoneNumber/:confirmPhoneNumber/:amount/:motif/:code
+    title: $store.sendingMoneyScreen.data
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: sendingMoney.js
+        lang: js
+    end: $store.sendingMoneyScreen.end
+
+  
+  - path: /3/:phoneNumber/:confirmPhoneNumber/:amount/:motif/:code/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  
+
+
+  - path: /5
+    title: $store.avanceAnanasScreen.data
+    actions:
+      - type: script
+        file: avanceAnanasScreen.js
+        lang: js
+    end: $store.avanceAnanasScreen.end
+
+  - path: /5/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  
+
+
+
+  - path: /5/1
+    title: $store.checkMaxQuantityAvanceAnanasScreen.data
+    actions:
+      - type: script
+        file: checkMaxQuantityAvanceAnanasScreen.js
+        lang: js
+  
+  
+  
+  - path: /5/1/:quantity
+    title: $store.confirmQuantityAvanceAnanasScreen.data
+    actions:
+      - type: store
+        command: write
+        key: quantity
+        value: $quantity
+      - type: script
+        file: confirmQuantityAvanceAnanasScreen.js
+        lang: js
+    end: $store.confirmQuantityAvanceAnanasScreen.end
+     
+
+  - path: /5/1/:quantity/1
+    title: $store.industrialListAvanceAnanasScreen.data
+    actions:
+      - type: script
+        file: industrialListAvanceAnanasScreen.js
+        lang: js
+    end: $store.industrialListAvanceAnanasScreen.end
+
+  - path: /5/1/:quantity/1/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  - path: /5/1/:quantity/1/:industrialIndex
+    title:  $store.sendAvanceAnanasRequestScreen.data
+    actions:
+      - type: store
+        command: write
+        key: industrialIndex
+        value: $industrialIndex
+      - type: script
+        file: sendAvanceAnanasRequest.js
+        lang: js
+    end: true
+    
+
+
+  - path: /5/1/:quantity/2
+    title: Entrez le montant que vous voulez
+    actions:
+      - type: script
+        file: rollbackQuantityChoiceAvanceAnanas.js
+        lang: js
+
+  - path: /5/1/:quantity/3
+    title: Demande annulée avec succès
+    end: true
+
+  - path: /5/2
+    title: Vos demandes
+    screen:
+      choices:
+        - Demandes en attentes
+        - Demandes acceptées
+        - Demandes rejetées
+  
+  - path: /5/2/1
+    title: $store.demandesAvanceAnanasScreen.data
+    actions:
+      - type: store
+        command: write
+        key: typeDemande
+        value: pending
+      - type: script
+        file: demandesAvanceAnanasScreen.js
+        lang: js
+
+  - path: /5/2/1/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+
+  - path: /5/2/2
+    title: $store.demandesAvanceAnanasScreen.data
+    actions:
+      - type: store
+        command: write
+        key: typeDemande
+        value: accepted
+      - type: script
+        file: demandesAvanceAnanasScreen.js
+        lang: js
+
+  - path: /5/2/2/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+
+  - path: /5/2/3
+    title: $store.demandesAvanceAnanasScreen.data
+    actions:
+      - type: store
+        command: write
+        key: typeDemande
+        value: rejected
+      - type: script
+        file: demandesAvanceAnanasScreen.js
+        lang: js
+
+  - path: /5/2/3/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+  
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  # - path: /6
+  #   title: $store.financementSocialScreen.data
+  #   actions:
+  #     - type: script
+  #       file: financementSocialScreen.js
+  #       lang: js
+  #   end: $store.financementSocialScreen.end
+
+  # - path: /6/0
+  #   title: $store.fisrtScreen.data
+  #   actions:
+  #     - type: script
+  #       file: rollbackPrincipalMenu.js
+  #       lang: js
+
+  
+
+
+
+  # - path: /6/1
+  #   title: $store.checkMaxQuantityFinancementSocialScreen.data
+  #   actions:
+  #     - type: script
+  #       file: checkMaxQuantityFinancementSocialScreen.js
+  #       lang: js
+  
+  
+  
+  # - path: /6/1/:quantity
+  #   title: $store.confirmQuantityFinancementSocialScreen.data
+  #   actions:
+  #     - type: store
+  #       command: write
+  #       key: quantity
+  #       value: $quantity
+  #     - type: script
+  #       file: confirmQuantityFinancementSocialScreen.js
+  #       lang: js
+  #   end: $store.confirmQuantityFinancementSocialScreen.end
+     
+
+  # - path: /6/1/:quantity/1
+  #   title: $store.industrialListFinancementSocialScreen.data
+  #   actions:
+  #     - type: script
+  #       file: industrialListFinancementSocialScreen.js
+  #       lang: js
+  #   end: $store.industrialListFinancementSocialScreen.end
+
+  # - path: /6/1/:quantity/1/0
+  #   title: $store.fisrtScreen.data
+  #   actions:
+  #     - type: script
+  #       file: rollbackPrincipalMenu.js
+  #       lang: js
+
+  # - path: /6/1/:quantity/1/:industrialIndex
+  #   title:  $store.sendFinancementSocialRequestScreen.data
+  #   actions:
+  #     - type: store
+  #       command: write
+  #       key: industrialIndex
+  #       value: $industrialIndex
+  #     - type: script
+  #       file: sendFinancementSocialRequest.js
+  #       lang: js
+  #   end: true
+    
+
+
+  # - path: /6/1/:quantity/2
+  #   title: Entrez le montant que vous voulez
+  #   actions:
+  #     - type: script
+  #       file: rollbackQuantityChoiceFinancementSocial.js
+  #       lang: js
+
+  # - path: /6/1/:quantity/3
+  #   title: Demande annulée avec succès
+  #   end: true
+
+  # - path: /6/2
+  #   title: Vos demandes
+  #   screen:
+  #     choices:
+  #       - Demandes en attentes
+  #       - Demandes acceptées
+  #       - Demandes rejetées
+  
+  # - path: /6/2/1
+  #   title: $store.demandesFinancementSocialScreen.data
+  #   actions:
+  #     - type: store
+  #       command: write
+  #       key: typeDemande
+  #       value: pending
+  #     - type: script
+  #       file: demandesFinancementSocialScreen.js
+  #       lang: js
+
+  # - path: /6/2/1/0
+  #   title: $store.fisrtScreen.data
+  #   actions:
+  #     - type: script
+  #       file: rollbackPrincipalMenu.js
+  #       lang: js
+
+
+  # - path: /6/2/2
+  #   title: $store.demandesAvanceAnanasScreen.data
+  #   actions:
+  #     - type: store
+  #       command: write
+  #       key: typeDemande
+  #       value: accepted
+  #     - type: script
+  #       file: demandesAvanceAnanasScreen.js
+  #       lang: js
+
+  # - path: /6/2/2/0
+  #   title: $store.fisrtScreen.data
+  #   actions:
+  #     - type: script
+  #       file: rollbackPrincipalMenu.js
+  #       lang: js
+
+
+  # - path: /6/2/3
+  #   title: $store.demandesAvanceAnanasScreen.data
+  #   actions:
+  #     - type: store
+  #       command: write
+  #       key: typeDemande
+  #       value: rejected
+  #     - type: script
+  #       file: demandesAvanceAnanasScreen.js
+  #       lang: js
+
+  # - path: /6/2/3/0
+  #   title: $store.fisrtScreen.data
+  #   actions:
+  #     - type: script
+  #       file: rollbackPrincipalMenu.js
+  #       lang: js
+
+
+
+
+
+
+
+
+
+
+
+
+  # - path: /6/3
+  #   title: $store.financementContratScreen.data
+  #   actions:
+  #     - type: script
+  #       file: financementContratScreen.js
+  #       lang: js
+
+  # - path: /6/3/:contratIndex
+  #   title: $store.selectedFinancementContratScreen.data
+  #   actions:
+  #     - type: store
+  #       command: write
+  #       key: contratIndex
+  #       value: $contratIndex
+  #     - type: script
+  #       file: selectedFinancementContratScreen.js
+  #       lang: js
+
+  # - path: /6/3/:contratIndex/1
+  #   title: $store.refundScreen.data
+  #   actions:
+  #     - type: script
+  #       file: refundScreen.js
+  #       lang: js
+
+  #   end : $store.refundScreen.end
+
+  # - path: /7/1/:contratIndex/:code
+  #   title: $store.declareLivraisonContratScreen.data
+  #   actions:
+  #     - type: store
+  #       command: write
+  #       key: code
+  #       value: $code
+  #     - type: script
+  #       file: declareLivraisonContrat.js
+  #       lang: js
+
+  # - path: /7/1/:contratIndex/:code/9
+  #   title: $store.fisrtScreen.data
+  #   actions:
+  #     - type: script
+  #       file: rollbackPrincipalMenu.js
+  #       lang: js
+
+
+
+  # - path: /7/1/:contratIndex/3
+  #   title: "Déclaration annulé avec succès"
+  #   end: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  - path: /6
+    title: Mes contrats
+    screen:
+      choices:
+        - Contrats en cours
+        - Contrats terminés
+        
+
+  - path: /6/1
+    title: $store.livraisonContratScreen.data
+    actions:
+      - type: script
+        file: livraisonContratScreen.js
+        lang: js
+  
+    
+
+  - path: /6/1/0
+    title:  Mes contrats
+    screen:
+      choices:
+        - Contrats en cours
+        - Contrats terminés
+    actions:
+      - type: script
+        file: contratRollback.js
+        lang: js
+
+  - path: /6/1/:contratIndex
+    title: $store.selectedLivraisonContratScreen.data
+    actions:
+      - type: store
+        command: write
+        key: contratIndex
+        value: $contratIndex
+      - type: script
+        file: selectedLivraisonContrat.js
+        lang: js
+  
+ 
+
+  - path: /6/1/:contratIndex/1
+    title: "Code PIN agriwallet"
+
+  - path: /6/1/:contratIndex/1/:code
+    title: $store.declareLivraisonContratScreen.data
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: declareLivraisonContrat.js
+        lang: js
+
+  - path: /6/1/:contratIndex/1/:code/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+
+
+  - path: /6/1/:contratIndex/3
+    title: "Déclaration annulé avec succès"
+    end: true
+
+  - path: /6/1/:contratIndex/2
+    title: "Entrez la quantité disponible(en kilogramme)"
+
+  - path: /6/1/:contratIndex/2/:quantity
+    title: "Code PIN agriwallet"
+    actions:
+      - type: store
+        command: write
+        key: quantity
+        value: $quantity
+
+  - path: /6/1/:contratIndex/2/:quantity/:code
+    title: $store.declareLivraisonContratScreen.data
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: declareLivraisonContrat.js
+        lang: js
+    
+  - path: /6/1/:contratIndex/2/:quantity/:code/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+
+
+
+
+  - path: /6/2
+    title: $store.confirmationScreen.data
+    actions:
+      - type: script
+        file: confirmationScreen.js
+        lang: js
+    end : $store.confirmationScreen.end
+
+  - path: /6/2/0
+    title:  Mes contrats
+    screen:
+      choices:
+        - Contrats en cours
+        - Contrats terminés
+    actions:
+      - type: script
+        file: contratRollback.js
+        lang: js
+    
+
+  
+
+  - path: /6/2/:contratIndex
+    title: $store.selectedLivraisonContratScreen.data
+    actions:
+      - type: store
+        command: write
+        key: contratIndex
+        value: $contratIndex
+      - type: script
+        file: selectedConfirmLivraisonContrat.js
+        lang: js
+  
+  - path: /6/2/:contratIndex/1
+    title: "Code PIN agriwallet"
+
+  - path: /6/2/:contratIndex/1/:code
+    title: $store.confirmLivraisonContratScreen.data
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: confirmLivraisonContrat.js
+        lang: js
+
+  - path: /6/2/:contratIndex/1/:code/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  - path: /6/2/:contratIndex/2
+    title: "Confirmation annulé avec succès"
+    end: true
+
+  - path: /6/2/:contratIndex/2
+    title: "Déclaration annulé avec succès"
+    end: true
+
+
+
+
+  - path: /5/2/1/0
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+  
+  - path: /5/2/1/:demandeIndex
+    title: $store.demandeIntrant.data
+    actions:
+      - type: store
+        command: write
+        key: demandeIndex
+        value: $demandeIndex
+      - type: script
+        file: demandeIntrant.js
+        lang: js
+    end: demandeIntrant.end
+
+
+  - path: /7 
+    title: Achat d'intrants
+    screen:
+      choices:
+        - Fenacopab
+        - Retour
+
+  - path: /7/1
+    title: $store.intrantsScreen.data
+    actions:
+      - type: script
+        file: intrantsFenacopab.js
+        lang: js
+    
+
+  - path: /7/1/:intrantIndex
+    title: Saisissez la quantité voulue.
+    actions:
+      - type: store
+        command: write
+        key: intrantIndex
+        value: $intrantIndex
+
+
+  - path: /7/1/:intrantIndex/:quantity
+    title: $store.totalAmountScreen.title
+    actions:
+      - type: store
+        command: write
+        key: quantity
+        value: $quantity
+      - type: script
+        file: totalIntrantsAmountFenacopab.js
+        lang: js
+
+  
+  - path: /7/1/:intrantIndex/:quantity/1
+    title: Saisissez votre code PIN
+
+
+  - path: /7/1/:intrantIndex/:quantity/1/:code
+    title: "Votre code de retrait est : AGW-56177774.Vous pouvez retirer vos produits dans le magasins de Zinvie, Kpomasse ou Allada."
+    end: true
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  - path: /:code
+    title: "$store.confirmCodeScreen.data"
+    actions:
+      - type: store
+        command: write
+        key: code
+        value: $code
+      - type: script
+        file: checkCode.js
+        lang: js
+    end: $store.confirmCodeScreen.end
+
+  - path: /:code/:confirmCode
+    title: "$store.defineCodeScreen.data"
+    actions:
+      - type: store
+        command: write
+        key: confirmCode
+        value: $confirmCode
+      - type: script
+        file: defineCode.js
+        lang: js
+    end: $store.defineCodeScreen.end
+
+  - path: /:code/:confirmCode/9
+    title: $store.fisrtScreen.data
+    actions:
+      - type: script
+        file: verifyUserIdentity.js
+        lang: js
+      - type: script
+        file: rollbackPrincipalMenu.js
+        lang: js
+
+  
+ 
+
+  
+
+  
+    
+
+    

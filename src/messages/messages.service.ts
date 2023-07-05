@@ -5,13 +5,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Message } from './messages.schema';
 import { Model } from 'mongoose';
 import { DiscussionsService } from '../discussions/discussions.service';
+var fs = require('fs');
+var randomstring = require('randomstring');
 
 @Injectable()
 export class MessagesService {
 
   constructor(@InjectModel(Message.name) private messageModel : Model<Message>, private discussionService : DiscussionsService){}
 
-  async create(createMessageDto: CreateMessageDto, userId : string) {
+  async create(createMessageDto: CreateMessageDto, userId : string,file) {
     let discussion
     try{
        discussion = await this.discussionService.findOne(createMessageDto.discussionId).populate('participants.user')
@@ -35,12 +37,32 @@ export class MessagesService {
       if(!oldMessage)
         throw new BadRequestException('Old message not exist')
     }
+
+    let filePath = null
+    
+    if(file){
+      let folder = 'public/data/files'
+
+    try{
+      if (!fs.existsSync(folder))
+        fs.mkdirSync(folder, { recursive: true });
+    }
+    catch(error){
+      console.log("je suis par ici");
+      
+    }
+
+    const name = `${randomstring.generate(5)}-${file.originalname}`;
+    filePath = `${folder}/${name}`;
+    fs.writeFileSync(filePath, file.buffer);
+    }
       
     return this.messageModel.create({
+      file:filePath,
       receiveDiscussion : createMessageDto.discussionId,
         sender: userId,
         text: createMessageDto.text,
-        responseToMsg : createMessageDto.responseToMessageId
+        responseToMsg : createMessageDto.responseToMessageId ? createMessageDto.responseToMessageId : null
     }) 
   }
 
