@@ -114,7 +114,7 @@ export class DiscussionsService {
   }
 
   findOne(id: string) {
-    return this.discussionModel.findById(id).populate('user1').populate('user2')
+    return this.discussionModel.findById(id).populate('participants.user')
   }
 
   async userIsAdminInDiscussion(disccussion : DiscussionDocument, userId){
