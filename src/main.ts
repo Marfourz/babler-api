@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors()
   const config = new DocumentBuilder()
   .setTitle('Blabber api')
   .setDescription('The blabber API description')
